@@ -25,7 +25,7 @@ provider "aws" {
 # ==============================================================================
 variable "domain_name" {
   type        = string
-  default     = "beta.falkzach.net" # Changed to falkzach.net during final cutover
+  default     = "falkzach.net"
   description = "The absolute target domain name for the portfolio site."
 }
 
@@ -107,6 +107,15 @@ resource "aws_s3_object" "html_east_1" {
   key          = "index.html"
   source       = "index.html"
   content_type = "text/html"
+  etag         = filemd5("index.html")
+}
+
+resource "aws_s3_object" "favicon_east_1" {
+  bucket       = aws_s3_bucket.east_1.id
+  key          = "favicon.ico"
+  source       = "favicon.ico"
+  content_type = "image/x-icon"
+  etag         = filemd5("favicon.ico")
 }
 
 # --- REGION 2: us-west-2 ---
@@ -129,6 +138,16 @@ resource "aws_s3_object" "html_west_2" {
   key          = "index.html"
   source       = "index.html"
   content_type = "text/html"
+  etag         = filemd5("index.html")
+}
+
+resource "aws_s3_object" "favicon_west_2" {
+  provider     = aws.us_west_2
+  bucket       = aws_s3_bucket.west_2.id
+  key          = "favicon.ico"
+  source       = "favicon.ico"
+  content_type = "image/x-icon"
+  etag         = filemd5("favicon.ico")
 }
 
 # ==============================================================================
